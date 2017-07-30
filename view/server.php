@@ -30,7 +30,26 @@ $server->register("ListaProveedores",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
+// agregar proveedor
+$server->register("insertarProveedor",
+			array('descripcion' => 'xsd:string','ruc' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+// modificar proveedor
+$server->register("modificarProveedor",
+			array('descripcion' => 'xsd:string','ruc' => 'xsd:string','id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+// eliminar  proveedor
+$server->register("eliminarProveedor",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+// buscar  proveedor
+$server->register("buscarProveedor",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);
 ?>
-
