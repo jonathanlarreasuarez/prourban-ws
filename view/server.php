@@ -11,7 +11,7 @@ require_once('../lib/nusoap.php');
 require('../model/model.php');
 
 $server = new soap_server;
-$ns = $_SERVER["DOCUMENT_ROOT"] . "/server/view/server.php";
+$ns = $_SERVER["DOCUMENT_ROOT"] . "/prourban-ws/view/server.php";
 $server->configurewsdl('ProurbanWSDL', $ns);
 
 
@@ -28,6 +28,11 @@ $server->register("CargaMenu",
 //Lista de proveedores
 $server->register("ListaProveedores",
 			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//Guarda proveedor
+$server->register("CrearProveedor",
+			array('descripcion' => 'xsd:string','ruc' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

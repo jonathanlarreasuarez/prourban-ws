@@ -1,0 +1,8 @@
+INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ($descripcion, $ruc)INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('', '')INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('', '')INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('', '')INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('Claro', '0985642173745')INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('Tv Cable', '0947563521002')INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('Pr1', '9876543217412')

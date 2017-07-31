@@ -1,6 +1,6 @@
 <?php
 
-include($_SERVER["DOCUMENT_ROOT"] . '/server/db/conexion.php');
+include($_SERVER["DOCUMENT_ROOT"] . '/prourban-ws/db/conexion.php');
 
 function Autenticacion($usuario, $clave) {
 
@@ -90,6 +90,44 @@ function ListaProveedores() {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "No existen registros de proveedores!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+	
+}
+
+//	Guarda proveedor
+function CrearProveedor($descripcion, $ruc) {
+
+	//obtiene el id del usuario
+	$sql = "INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('".$descripcion."', '".$ruc."')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	//$num = $db->encontradas($result);
+
+	$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		// for ($i=0; $i < $num; $i++) {
+		// 	$respuesta->datos[] = mysql_fetch_array($result);
+		// }
+
+		$respuesta->datos[] = $result;
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No se ha podido guardar el registro";
 		$respuesta->codigo = 0;
 	}
 
