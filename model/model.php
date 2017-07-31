@@ -98,9 +98,36 @@ function ListaProveedores() {
 }
 
 //	inserta un proveedor
-function insertarProveedor($descripcion, $ruc) {
+function InsertarProveedor($descripcion, $ruc) {
+	$sql = "INSERT INTO proveedor (descripcion, ruc) 
+			VALUES ('$descripcion', '$ruc')";
 
-	$sql = "INSERT INTO `proveedor` (`descripcion`, `ruc`) VALUES ('$descripcion', '$ruc');";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function BuscarProveedor($id) {
+
+	$sql = "SELECT * FROM proveedor WHERE id = $id";
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -119,33 +146,35 @@ function insertarProveedor($descripcion, $ruc) {
 		$respuesta->mensaje = "Ok";
 		$respuesta->codigo = 1;
 	} else {
-		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->mensaje = "Ha ocurrido un error!";
 		$respuesta->codigo = 0;
 	}
 
 	return json_encode($respuesta);
-
 }
 
-function buscarProveedor($id) {
+function ModificarProveedor($id, $descripcion, $ruc) {
 
-	$sql = "SELECT descripcion, ruc FROM `proveedor` WHERE id = $id";
+	$sql = "UPDATE proveedor SET descripcion = '$descripcion', ruc = '$ruc' WHERE proveedor.id = $id";
+
+	$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
-	$num = $db->encontradas($result);
 
 	$respuesta->datos = [];
 	$respuesta->mensaje = "";
 	$respuesta->codigo = "";
 
-	if ($num != 0) {
+	if ($result) {
 
 		for ($i=0; $i < $num; $i++) {
 			$respuesta->datos[] = mysql_fetch_array($result);
 		}
 
-		$respuesta->mensaje = "Ok";
+		$respuesta->mensaje = "Registro actualizado!";
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "Datos inválidos!";
@@ -153,35 +182,32 @@ function buscarProveedor($id) {
 	}
 
 	return json_encode($respuesta);
-
 }
 
-function modificarProveedor($descripcion, $ruc, $id) {
-
-	$sql = "UPDATE `proveedor` SET `descripcion` = '$descripcion', `ruc` = '$ruc' WHERE `proveedor`.`id` = $id;";
+function EliminarProveedor($id) {
+	$sql = "DELETE FROM proveedor WHERE id=$id";
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
-	$num = $db->encontradas($result);
 
 	$respuesta->datos = [];
 	$respuesta->mensaje = "";
 	$respuesta->codigo = "";
 
-	if ($num != 0) {
+	if ($result) {
 
 		for ($i=0; $i < $num; $i++) {
 			$respuesta->datos[] = mysql_fetch_array($result);
 		}
 
-		$respuesta->mensaje = "Ok";
+		$respuesta->mensaje = "Registro eliminado con éxito!";
 		$respuesta->codigo = 1;
 	} else {
-		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->mensaje = "Ha ocurrido un error!";
 		$respuesta->codigo = 0;
 	}
 
 	return json_encode($respuesta);
-
 }
+
 ?>
