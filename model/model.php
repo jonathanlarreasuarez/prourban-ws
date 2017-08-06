@@ -210,4 +210,36 @@ function EliminarProveedor($id) {
 	return json_encode($respuesta);
 }
 
+
+//	Devuelve lista de gastos
+function ListaDeudasUsuarios() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado FROM cuentaxcobrar INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id INNER JOIN persona ON persona.id = usuario.persona_id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de proveedores!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+
+}
+
 ?>
