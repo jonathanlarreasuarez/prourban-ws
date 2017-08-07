@@ -96,12 +96,11 @@ function ListaProveedores() {
 	}
 
 	return json_encode($respuesta);
-
 }
 
 //	inserta un proveedor
 function InsertarProveedor($descripcion, $ruc) {
-	$sql = "INSERT INTO proveedor (descripcion, ruc) 
+	$sql = "INSERT INTO proveedor (descripcion, ruc)
 			VALUES ('$descripcion', '$ruc')";
 
 	$db = new conexion();
@@ -212,13 +211,22 @@ function EliminarProveedor($id) {
 	return json_encode($respuesta);
 }
 
+//	Devuelve lista de gastos
+function ListaDeudasUsuarios($nombrexBuscar) {
 
-//	CUENTAXPAGAR
-function ListaCuentasxpagar() {
-
-	//obtiene el id del usuario
-	$sql = "SELECT a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
-			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
+	if ($nombrexBuscar === "nulo") {
+		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+						FROM cuentaxcobrar
+						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+						INNER JOIN persona ON persona.id = usuario.persona_id
+						WHERE cuentaxcobrar.estado='pendiente'";
+	}else {
+		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+						FROM cuentaxcobrar
+						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+						INNER JOIN persona ON persona.id = usuario.persona_id
+						where CONCAT (persona.primer_nombre, ' ' ,persona.primer_apellido) like '%$nombrexBuscar%' AND cuentaxcobrar.estado = 'pendiente'";
+	}
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -229,7 +237,6 @@ function ListaCuentasxpagar() {
 	$respuesta->codigo = "";
 
 	if ($num != 0) {
-
 		for ($i=0; $i < $num; $i++) {
 			$respuesta->datos[] = mysql_fetch_array($result);
 		}
@@ -242,7 +249,38 @@ function ListaCuentasxpagar() {
 	}
 
 	return json_encode($respuesta);
-
 }
 
+
+//	CUENTAXPAGAR
+/*function ListaCuentasxpagar() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
+			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de cuentas por pagar!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+*/
 ?>
