@@ -52,7 +52,7 @@ $server->register("BuscarProveedor",
 
 //	Lista de deudas
 $server->register("ListaDeudasUsuarios",
-			array(),
+			array('nombrexBuscar' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

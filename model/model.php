@@ -99,7 +99,7 @@ function ListaProveedores() {
 
 //	inserta un proveedor
 function InsertarProveedor($descripcion, $ruc) {
-	$sql = "INSERT INTO proveedor (descripcion, ruc) 
+	$sql = "INSERT INTO proveedor (descripcion, ruc)
 			VALUES ('$descripcion', '$ruc')";
 
 	$db = new conexion();
@@ -212,10 +212,22 @@ function EliminarProveedor($id) {
 
 
 //	Devuelve lista de gastos
-function ListaDeudasUsuarios() {
+function ListaDeudasUsuarios($nombrexBuscar) {
 
+	if ($nombrexBuscar === "nulo") {
+		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+						FROM cuentaxcobrar
+						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+						INNER JOIN persona ON persona.id = usuario.persona_id";
+	}else {
+		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+						FROM cuentaxcobrar
+						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+						INNER JOIN persona ON persona.id = usuario.persona_id
+						where CONCAT (persona.primer_nombre, ' ' ,persona.primer_apellido) like '%$nombrexBuscar%' AND cuentaxcobrar.estado = 'pendiente'";
+	}
 	//obtiene el id del usuario
-	$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado FROM cuentaxcobrar INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id INNER JOIN persona ON persona.id = usuario.persona_id";
+
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -234,12 +246,14 @@ function ListaDeudasUsuarios() {
 		$respuesta->mensaje = "Ok";
 		$respuesta->codigo = 1;
 	} else {
-		$respuesta->mensaje = "No existen registros de proveedores!";
+		$respuesta->mensaje = $sql;
 		$respuesta->codigo = 0;
 	}
 
 	return json_encode($respuesta);
 
 }
+
+
 
 ?>
