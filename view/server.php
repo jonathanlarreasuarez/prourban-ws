@@ -55,9 +55,9 @@ $server->register("BuscarProveedor",
 
 // CUENTAXPAGAR
 // Lista de cuentas por pagar
-/*$server->register("ListaCuentasxpagar",
+$server->register("ListaCuentasxpagar",
 			array(),
-			array('respuesta' => 'xsd:string'), $ns);*/
+			array('respuesta' => 'xsd:string'), $ns);
 
 //	Lista de deudas
 $server->register("ListaDeudasUsuarios",

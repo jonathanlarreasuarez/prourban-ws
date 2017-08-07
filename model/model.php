@@ -253,7 +253,7 @@ function ListaDeudasUsuarios($nombrexBuscar) {
 
 
 //	CUENTAXPAGAR
-/*function ListaCuentasxpagar() {
+function ListaCuentasxpagar() {
 
 	//obtiene el id del usuario
 	$sql = "SELECT a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
@@ -280,7 +280,11 @@ function ListaDeudasUsuarios($nombrexBuscar) {
 		$respuesta->codigo = 0;
 	}
 
+	$fi = fopen("prourban.log", "a");
+	fwrite($fi, $respuesta->codigo);
+	fclose($fi);
+
 	return json_encode($respuesta);
 }
-*/
+
 ?>
