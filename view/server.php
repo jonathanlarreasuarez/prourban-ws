@@ -24,6 +24,8 @@ $server->register("CargaMenu",
 			array('usuario_id' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
+
+//	PROVEEDOR
 //	Lista de proveedores
 $server->register("ListaProveedores",
 			array(),
@@ -47,6 +49,13 @@ $server->register("EliminarProveedor",
 //	Busca proveedor
 $server->register("BuscarProveedor",
 			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+// CUENTAXPAGAR
+// Lista de cuentas por pagar
+$server->register("ListaCuentasxpagar",
+			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

@@ -66,6 +66,8 @@ function CargaMenu($usuario_id) {
 	}
 }
 
+
+//	PROVEEDOR
 //	Devuelve lista de proveedores
 function ListaProveedores() {
 
@@ -208,6 +210,39 @@ function EliminarProveedor($id) {
 	}
 
 	return json_encode($respuesta);
+}
+
+
+//	CUENTAXPAGAR
+function ListaCuentasxpagar() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
+			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de cuentas por pagar!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+
 }
 
 ?>
