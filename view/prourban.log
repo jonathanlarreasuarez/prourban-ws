@@ -1,1 +1,5 @@
-1111111111110111UPDATE proveedor SET descripcion = 'Proveedor', ruc = '1234560539001' WHERE proveedor.id = 27111111
+1111111111110111UPDATE proveedor SET descripcion = 'Proveedor', ruc = '1234560539001' WHERE proveedor.id = 27111111111111111111111111111111111UPDATE cuentaxpagar SET descripcion = '2017-08-06', fecha = '500.00', total = '125046',
+				numero_referencia = '3', proveedor_id = '7'
+			WHERE proveedor.id = Alumbrado publicoUPDATE cuentaxpagar SET descripcion = '2017-08-06', fecha = '500.00', total = '125046',
+				numero_referencia = '3', proveedor_id = '7'
+			WHERE cuentaxpagar.id = Alumbrado publico

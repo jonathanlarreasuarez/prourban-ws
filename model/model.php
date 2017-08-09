@@ -216,16 +216,16 @@ function ListaDeudasUsuarios($nombrexBuscar) {
 
 	if ($nombrexBuscar === "nulo") {
 		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
-						FROM cuentaxcobrar
-						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
-						INNER JOIN persona ON persona.id = usuario.persona_id
-						WHERE cuentaxcobrar.estado='pendiente'";
+				FROM cuentaxcobrar
+				INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+				INNER JOIN persona ON persona.id = usuario.persona_id
+				WHERE cuentaxcobrar.estado='pendiente'";
 	}else {
 		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
-						FROM cuentaxcobrar
-						INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
-						INNER JOIN persona ON persona.id = usuario.persona_id
-						where CONCAT (persona.primer_nombre, ' ' ,persona.primer_apellido) like '%$nombrexBuscar%' AND cuentaxcobrar.estado = 'pendiente'";
+				FROM cuentaxcobrar
+				INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+				INNER JOIN persona ON persona.id = usuario.persona_id
+				where CONCAT (persona.primer_nombre, ' ' ,persona.primer_apellido) like '%$nombrexBuscar%' AND cuentaxcobrar.estado = 'pendiente'";
 	}
 
 	$db = new conexion();
@@ -256,7 +256,7 @@ function ListaDeudasUsuarios($nombrexBuscar) {
 function ListaCuentasxpagar() {
 
 	//obtiene el id del usuario
-	$sql = "SELECT a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
+	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
 			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
 
 
@@ -280,9 +280,118 @@ function ListaCuentasxpagar() {
 		$respuesta->codigo = 0;
 	}
 
-	$fi = fopen("prourban.log", "a");
-	fwrite($fi, $respuesta->codigo);
-	fclose($fi);
+	return json_encode($respuesta);
+}
+
+function BuscarCuentaxpagar($id) {
+
+	$sql = "SELECT a.*, b.descripcion AS nombre_proveedor FROM cuentaxpagar a
+			INNER JOIN proveedor b on a.proveedor_id = b.id
+			WHERE a.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function ModificarCuentaxpagar($id, $descripcion, $fecha, $total, $numero_referencia, $proveedor_id) {
+
+	$sql = "UPDATE cuentaxpagar SET descripcion = '$descripcion', fecha = '$fecha', total = '$total',
+				numero_referencia = '$numero_referencia', proveedor_id = '$proveedor_id'
+			WHERE cuentaxpagar.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function InsertarCuentaxpagar($descripcion, $fecha, $total, $numero_referencia, $proveedor_id) {
+
+	$sql = "INSERT INTO cuentaxpagar (descripcion, fecha, total, numero_referencia, proveedor_id)
+			VALUES ('$descripcion', '$fecha', '$total', '$numero_referencia', '$proveedor_id')";
+			
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function EliminarCuentaxpagar($id) {
+	$sql = "DELETE FROM cuentaxpagar WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
 
 	return json_encode($respuesta);
 }

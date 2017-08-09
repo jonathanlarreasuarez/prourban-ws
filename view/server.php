@@ -53,16 +53,41 @@ $server->register("BuscarProveedor",
 
 
 
-// CUENTAXPAGAR
-// Lista de cuentas por pagar
+//	CUENTAXPAGAR
+//	Lista de cuentas por pagar
 $server->register("ListaCuentasxpagar",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
+//	Busca cuenta por pagar
+$server->register("BuscarCuentaxpagar",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarCuentaxpagar",
+			array('descripcion' => 'xsd:string', 'fecha' => 'xsd:string', 
+				  'total' => 'xsd:string', 'numero_referencia' => 'xsd:string', 
+				  'proveedor_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	Modifica cuenta por pagar
+$server->register("ModificarCuentaxpagar",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string',
+				'fecha' => 'xsd:string', 'total' => 'xsd:string',
+				'numero_referencia' => 'xsd:string', 'proveedor_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarCuentaxpagar",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+//	CUENTAXCOBRAR
 //	Lista de deudas
 $server->register("ListaDeudasUsuarios",
 			array('nombrexBuscar' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
+
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);
