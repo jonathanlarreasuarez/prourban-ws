@@ -211,8 +211,8 @@ function EliminarProveedor($id) {
 	return json_encode($respuesta);
 }
 
-//	Devuelve lista de gastos
-function ListaDeudasUsuarios($nombrexBuscar) {
+//	Cuentaxcobrar
+function ListaCuentaxcobrar($nombrexBuscar) {
 
 	if ($nombrexBuscar === "nulo") {
 		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
