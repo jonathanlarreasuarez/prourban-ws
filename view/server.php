@@ -52,7 +52,6 @@ $server->register("BuscarProveedor",
 			array('respuesta' => 'xsd:string'), $ns);
 
 
-
 //	CUENTAXPAGAR
 //	Lista de cuentas por pagar
 $server->register("ListaCuentasxpagar",
@@ -88,6 +87,12 @@ $server->register("ListaDeudasUsuarios",
 			array('nombrexBuscar' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
+
+//	RESERVA
+//	Lista de pre-reservas
+$server->register("ListaPreReservas",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);

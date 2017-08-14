@@ -396,4 +396,41 @@ function EliminarCuentaxpagar($id) {
 	return json_encode($respuesta);
 }
 
+
+//---- RESERVA ----//
+
+function ListaPreReservas() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT a.id, a.fecha_solicitud, a.fecha_reserva, c.primer_nombre,
+				   c.primer_apellido, c.cedula, d.descripcion
+			FROM reserva a INNER JOIN usuario b ON a.usuario_id = b.id
+			INNER JOIN persona c on b.persona_id = c.id
+			INNER JOIN area d ON a.area_id = d.id
+			WHERE a.estado = 'Pre-reservado'";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen reservas pendientes!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
 ?>
