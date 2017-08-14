@@ -87,6 +87,11 @@ $server->register("ListaCuentaxcobrar",
 			array('nombrexBuscar' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
+//	FACTURA
+$server->register("CabeceraFactura",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);

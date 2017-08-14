@@ -215,7 +215,7 @@ function EliminarProveedor($id) {
 function ListaCuentaxcobrar($nombrexBuscar) {
 
 	if ($nombrexBuscar === "nulo") {
-		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+		$sql = "SELECT cuentaxcobrar.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
 				FROM cuentaxcobrar
 				INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
 				INNER JOIN persona ON persona.id = usuario.persona_id
@@ -390,6 +390,39 @@ function EliminarCuentaxpagar($id) {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+//	FACTURA
+function CabeceraFactura($id) {
+
+	//obtiene el id de la cuentaXcobrar
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
+					inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
+					INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
+					INNER JOIN persona ON persona.id = usuario.persona_id 
+					INNER JOIN inmueble ON usuario.id = inmueble.id WHERE cuentaxcobrar.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros";
 		$respuesta->codigo = 0;
 	}
 
