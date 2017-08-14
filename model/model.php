@@ -251,6 +251,34 @@ function ListaCuentaxcobrar($nombrexBuscar) {
 	return json_encode($respuesta);
 }
 
+function BuscarCuentaxcobrar($id) {
+
+	$sql = "SELECT * FROM cuentaxcobrar WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
 
 //	CUENTAXPAGAR
 function ListaCuentasxpagar() {
@@ -423,6 +451,39 @@ function CabeceraFactura($id) {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "No existen registros";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function ListaCabeceraFactura() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
+					inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
+					INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
+					INNER JOIN persona ON persona.id = usuario.persona_id 
+					INNER JOIN inmueble ON usuario.id = inmueble.id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de Cabecera Factura!";
 		$respuesta->codigo = 0;
 	}
 
