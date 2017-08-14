@@ -82,9 +82,21 @@ $server->register("EliminarCuentaxpagar",
 
 
 //	CUENTAXCOBRAR
-//	Lista de deudas
-$server->register("ListaDeudasUsuarios",
+$server->register("ListaCuentaxcobrar",
 			array('nombrexBuscar' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarCuentaxcobrar",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	FACTURA
+$server->register("CabeceraFactura",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ListaCabeceraFactura",
+			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
 

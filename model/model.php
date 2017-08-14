@@ -158,10 +158,6 @@ function ModificarProveedor($id, $descripcion, $ruc) {
 
 	$sql = "UPDATE proveedor SET descripcion = '$descripcion', ruc = '$ruc' WHERE proveedor.id = $id";
 
-	$file = fopen("prourban.log", "a");
-	fwrite($file, $sql);
-	fclose($file);
-
 	$db = new conexion();
 	$result = $db->consulta($sql);
 
@@ -211,11 +207,11 @@ function EliminarProveedor($id) {
 	return json_encode($respuesta);
 }
 
-//	Devuelve lista de gastos
-function ListaDeudasUsuarios($nombrexBuscar) {
+//	Cuentaxcobrar
+function ListaCuentaxcobrar($nombrexBuscar) {
 
 	if ($nombrexBuscar === "nulo") {
-		$sql = "SELECT usuario.id, persona.primer_nombre, persona.primer_apellido, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
+		$sql = "SELECT cuentaxcobrar.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, cuentaxcobrar.fecha_maxima_pago, cuentaxcobrar.estado
 				FROM cuentaxcobrar
 				INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
 				INNER JOIN persona ON persona.id = usuario.persona_id
@@ -245,6 +241,34 @@ function ListaDeudasUsuarios($nombrexBuscar) {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "No existen registros de cuentas por pagar!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function BuscarCuentaxcobrar($id) {
+
+	$sql = "SELECT * FROM cuentaxcobrar WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
 		$respuesta->codigo = 0;
 	}
 
@@ -409,7 +433,6 @@ function ListaPreReservas() {
 			INNER JOIN area d ON a.area_id = d.id
 			WHERE a.estado = 'Pre-reservado'";
 
-
 	$db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -427,6 +450,73 @@ function ListaPreReservas() {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "No existen reservas pendientes!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+
+//	FACTURA
+function CabeceraFactura($id) {
+
+	//obtiene el id de la cuentaXcobrar
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
+				   inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
+			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
+			INNER JOIN persona ON persona.id = usuario.persona_id 
+			INNER JOIN inmueble ON usuario.id = inmueble.id WHERE cuentaxcobrar.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function ListaCabeceraFactura() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
+				   inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
+			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
+			INNER JOIN persona ON persona.id = usuario.persona_id 
+			INNER JOIN inmueble ON usuario.id = inmueble.id";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de Cabecera Factura!";
 		$respuesta->codigo = 0;
 	}
 
