@@ -426,12 +426,12 @@ function EliminarCuentaxpagar($id) {
 function ListaPreReservas() {
 
 	//obtiene el id del usuario
-	$sql = "SELECT a.id, a.fecha_solicitud, a.fecha_reserva, c.primer_nombre,
-				   c.primer_apellido, c.cedula, d.descripcion
-			FROM reserva a INNER JOIN usuario b ON a.usuario_id = b.id
-			INNER JOIN persona c on b.persona_id = c.id
-			INNER JOIN area d ON a.area_id = d.id
-			WHERE a.estado = 'Pre-reservado'";
+	$sql = "SELECT reserva.id, reserva.fecha_solicitud, reserva.fecha_reserva, concat(persona.primer_nombre, ' ', persona.primer_apellido) AS nombre,
+				   persona.cedula, area.descripcion
+			FROM reserva INNER JOIN usuario ON reserva.usuario_id = usuario.id
+			INNER JOIN persona on usuario.persona_id = persona.id
+			INNER JOIN area ON reserva.area_id = area.id
+			WHERE reserva.estado = 'Pre-reservado'";
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -461,8 +461,9 @@ function ListaPreReservas() {
 function CabeceraFactura($id) {
 
 	//obtiene el id de la cuentaXcobrar
-	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
-				   inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, concat(persona.primer_nombre, ' ', persona.primer_apellido) AS nombre,
+				   persona.cedula, concat('Manzana ', inmueble.manzana, ', villa ', inmueble.numero_villa) AS direccion
+			FROM cuentaxcobrar 
 			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
 			INNER JOIN persona ON persona.id = usuario.persona_id 
 			INNER JOIN inmueble ON usuario.id = inmueble.id WHERE cuentaxcobrar.id = $id";
