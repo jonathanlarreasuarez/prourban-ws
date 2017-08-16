@@ -64,8 +64,8 @@ $server->register("BuscarCuentaxpagar",
 			array('respuesta' => 'xsd:string'), $ns);
 
 $server->register("InsertarCuentaxpagar",
-			array('descripcion' => 'xsd:string', 'fecha' => 'xsd:string', 
-				  'total' => 'xsd:string', 'numero_referencia' => 'xsd:string', 
+			array('descripcion' => 'xsd:string', 'fecha' => 'xsd:string',
+				  'total' => 'xsd:string', 'numero_referencia' => 'xsd:string',
 				  'proveedor_id' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
@@ -95,10 +95,25 @@ $server->register("CabeceraFactura",
 			array('id' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
+$server->register("DetalleFactura",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
 $server->register("ListaCabeceraFactura",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
+$server->register("PagarFactura",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("GuardarCabeceraFactura",
+			array('fecha_factura' => 'xsd:string', 'numero_factura' => 'xsd:string', 'subtotal' => 'xsd:string', 'iva' => 'xsd:string', 'total' => 'xsd:string', 'formapago_id' => 'xsd:string', 'usuario_id' => 'xsd:string' ),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("GuardarDetalleFactura",
+			array('valor' => 'xsd:string', 'conceptopago_id' => 'xsd:string', 'factura_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
 
 //	RESERVA
 //	Lista de pre-reservas

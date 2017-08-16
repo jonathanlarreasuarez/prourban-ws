@@ -280,7 +280,7 @@ function BuscarCuentaxcobrar($id) {
 function ListaCuentasxpagar() {
 
 	//obtiene el id del usuario
-	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
+	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor
 			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
 
 
@@ -370,7 +370,7 @@ function InsertarCuentaxpagar($descripcion, $fecha, $total, $numero_referencia, 
 
 	$sql = "INSERT INTO cuentaxpagar (descripcion, fecha, total, numero_referencia, proveedor_id)
 			VALUES ('$descripcion', '$fecha', '$total', '$numero_referencia', '$proveedor_id')";
-			
+
 	$db = new conexion();
 	$result = $db->consulta($sql);
 
@@ -463,10 +463,38 @@ function CabeceraFactura($id) {
 	//obtiene el id de la cuentaXcobrar
 	$sql = "SELECT cuentaxcobrar.id, usuario.id, concat(persona.primer_nombre, ' ', persona.primer_apellido) AS nombre,
 				   persona.cedula, concat('Manzana ', inmueble.manzana, ', villa ', inmueble.numero_villa) AS direccion
-			FROM cuentaxcobrar 
-			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
-			INNER JOIN persona ON persona.id = usuario.persona_id 
+			FROM cuentaxcobrar
+			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+			INNER JOIN persona ON persona.id = usuario.persona_id
 			INNER JOIN inmueble ON usuario.id = inmueble.id WHERE cuentaxcobrar.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function DetalleFactura($id) {
+
+	//obtiene el id de la cuentaXcobrar
+	$sql = "SELECT * FROM `conceptopago` WHERE id = '$id'";
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -494,10 +522,10 @@ function CabeceraFactura($id) {
 function ListaCabeceraFactura() {
 
 	//obtiene el id del usuario
-	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula, 
-				   inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar 
-			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id 
-			INNER JOIN persona ON persona.id = usuario.persona_id 
+	$sql = "SELECT cuentaxcobrar.id, usuario.id, persona.primer_nombre, persona.primer_apellido, persona.cedula,
+				   inmueble.manzana, inmueble.numero_villa FROM cuentaxcobrar
+			INNER JOIN usuario ON usuario.id = cuentaxcobrar.usuario_id
+			INNER JOIN persona ON persona.id = usuario.persona_id
 			INNER JOIN inmueble ON usuario.id = inmueble.id";
 
 
@@ -524,4 +552,95 @@ function ListaCabeceraFactura() {
 	return json_encode($respuesta);
 }
 
+function PagarFactura($id) {
+
+	$sql = "UPDATE cuentaxcobrar SET estado = 'pagado'
+			WHERE cuentaxcobrar.id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function GuardarCabeceraFactura($fecha_factura, $numero_factura, $subtotal, $iva, $total, $formapago_id, $usuario_id) {
+
+	$sql = "INSERT INTO `factura` (`fecha_factura`, `numero_factura`, `subtotal`, `iva`, `total`, `formapago_id`, `usuario_id`)
+					VALUES ('$fecha_factura', '$numero_factura', '$subtotal', '$iva', '$total','$formapago_id' , '$usuario_id');";
+
+	$sqlNew = "SELECT id FROM `factura` ORDER BY id DESC LIMIT 1;";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$resultNew = $db->consulta($sqlNew);
+	$num = $db->encontradas($resultNew);
+
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($resultNew) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($resultNew);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function GuardarDetalleFactura($valor, $conceptopago_id, $factura_id) {
+
+	$sql = "INSERT INTO `facturadetalle` (`valor`, `estado`, `conceptopago_id`, `impuesto_id`, `factura_id`)
+					VALUES ('$valor', 'pagado', '$conceptopago_id', '1', '$factura_id');";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
 ?>
