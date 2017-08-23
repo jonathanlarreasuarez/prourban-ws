@@ -2,6 +2,56 @@
 
 include($_SERVER["DOCUMENT_ROOT"] . '/prourban-ws/db/conexion.php');
 
+function Consultar($sql, $mensajeError) {
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = $mensajeError;
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function Procesar($sql) {
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+
 function Autenticacion($usuario, $clave) {
 
 	//obtiene el id del usuario
@@ -207,7 +257,8 @@ function EliminarProveedor($id) {
 	return json_encode($respuesta);
 }
 
-//	Cuentaxcobrar
+
+//---- CUENTAXCOBRAR ----//
 function ListaCuentaxcobrar($nombrexBuscar) {
 
 	if ($nombrexBuscar === "nulo") {
@@ -276,12 +327,20 @@ function BuscarCuentaxcobrar($id) {
 }
 
 
-//	CUENTAXPAGAR
+//---- CUENTAXPAGAR ----//
+
 function ListaCuentasxpagar() {
 
 	//obtiene el id del usuario
+<<<<<<< HEAD
 	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor
 			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
+=======
+	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
+			FROM cuentaxpagar a 
+			INNER JOIN proveedor b ON a.proveedor_id = b.id
+			WHERE a.estado = 'ACTIVO'";
+>>>>>>> borrado logico de cuentas por pagar
 
 
 	$db = new conexion();
@@ -395,7 +454,7 @@ function InsertarCuentaxpagar($descripcion, $fecha, $total, $numero_referencia, 
 }
 
 function EliminarCuentaxpagar($id) {
-	$sql = "DELETE FROM cuentaxpagar WHERE id=$id";
+	$sql = "UPDATE cuentaxpagar SET estado = 'INACTIVO' WHERE id = $id";
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -456,8 +515,34 @@ function ListaPreReservas() {
 	return json_encode($respuesta);
 }
 
+function BuscarPreReserva($id) {
+	$sql = "SELECT reserva.id, usuario.id, concat(persona.primer_nombre, ' ', persona.primer_apellido) AS nombre,
+				   persona.cedula, concat('Manzana ', inmueble.manzana, ', villa ', inmueble.numero_villa) AS direccion, area.descripcion
+			FROM reserva 
+			INNER JOIN usuario ON usuario.id = reserva.usuario_id 
+			INNER JOIN persona ON persona.id = usuario.persona_id 
+			INNER JOIN area ON reserva.area_id = area.id
+			INNER JOIN inmueble ON usuario.id = inmueble.id WHERE reserva.id = $id";
 
-//	FACTURA
+	$mensajeError = "No se encontró la reserva!";
+
+	return Consultar($sql, $mensajeError);
+}
+
+function PagarReserva($id) {
+	$sql = "UPDATE reserva SET estado = 'Reservado'
+			WHERE id = $id";
+
+	$mensajeError = "No se ha podido realizar el pago de la reserva";
+
+	$result = Procesar($sql, $mensajeError);
+
+	return $result;
+}
+
+
+//---- FACTURA ----//
+
 function CabeceraFactura($id) {
 
 	//obtiene el id de la cuentaXcobrar
