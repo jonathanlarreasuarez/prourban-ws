@@ -332,15 +332,11 @@ function BuscarCuentaxcobrar($id) {
 function ListaCuentasxpagar() {
 
 	//obtiene el id del usuario
-<<<<<<< HEAD
+
 	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor
-			FROM cuentaxpagar a INNER JOIN proveedor b ON a.proveedor_id = b.id;";
-=======
-	$sql = "SELECT a.id, a.descripcion, a.fecha, a.total, b.descripcion AS nombre_proveedor 
-			FROM cuentaxpagar a 
+			FROM cuentaxpagar a
 			INNER JOIN proveedor b ON a.proveedor_id = b.id
 			WHERE a.estado = 'ACTIVO'";
->>>>>>> borrado logico de cuentas por pagar
 
 
 	$db = new conexion();
@@ -518,9 +514,9 @@ function ListaPreReservas() {
 function BuscarPreReserva($id) {
 	$sql = "SELECT reserva.id, usuario.id, concat(persona.primer_nombre, ' ', persona.primer_apellido) AS nombre,
 				   persona.cedula, concat('Manzana ', inmueble.manzana, ', villa ', inmueble.numero_villa) AS direccion, area.descripcion
-			FROM reserva 
-			INNER JOIN usuario ON usuario.id = reserva.usuario_id 
-			INNER JOIN persona ON persona.id = usuario.persona_id 
+			FROM reserva
+			INNER JOIN usuario ON usuario.id = reserva.usuario_id
+			INNER JOIN persona ON persona.id = usuario.persona_id
 			INNER JOIN area ON reserva.area_id = area.id
 			INNER JOIN inmueble ON usuario.id = inmueble.id WHERE reserva.id = $id";
 
@@ -723,6 +719,38 @@ function GuardarDetalleFactura($valor, $conceptopago_id, $factura_id) {
 		$respuesta->codigo = 1;
 	} else {
 		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+// ASIENTOS
+
+function ListaCuentas() {
+
+	//obtiene el id del usuario
+
+	$sql = "SELECT c.descripcion, c.saldo_inicial, c.saldo, tc.descripcion as tipo from cuenta c, tipocuenta tc  where c.tipocuenta_id = tc.id";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de cuentas";
 		$respuesta->codigo = 0;
 	}
 
