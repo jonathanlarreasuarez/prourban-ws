@@ -725,6 +725,37 @@ function GuardarDetalleFactura($valor, $conceptopago_id, $factura_id) {
 	return json_encode($respuesta);
 }
 
+function GuardarAsiento($fecha, $valor, $conceptopago_id, $factura_id) {
+
+	$sql = "INSERT INTO `asientocontable` (`descripcion`, `fecha`, `numero_referencia`, `debito`, `credito`, `diferencia`, `factura_id`, `cuentaxpagar_id`, `debitocuenta`, `creditocuenta`)
+					VALUES ('$conceptoPago', '$fecha', NULL, '$valor', '$valor', '0', '$factura_id', NULL, '1', '2');";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
 // ASIENTOS
 
 function ListaCuentas() {

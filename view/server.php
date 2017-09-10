@@ -113,6 +113,10 @@ $server->register("GuardarDetalleFactura",
 			array('valor' => 'xsd:string', 'conceptopago_id' => 'xsd:string', 'factura_id' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
+$server->register("GuardarAsiento",
+			array('fecha' => 'xsd:string', 'valor' => 'xsd:string', 'conceptoPago' => 'xsd:string', 'factura_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
 //	RESERVA
 $server->register("ListaPreReservas",
 			array(),
