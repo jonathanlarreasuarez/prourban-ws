@@ -789,7 +789,8 @@ function ListaCuentas() {
 }
 
 function ListaAsiento() {
-	$sql = "SELECT * FROM asientocontable";
+	$sql = "SELECT asientocontable.descripcion, asientocontable.fecha, asientocontable.numero_referencia, asientocontable.debito, asientocontable.credito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.debitocuenta, asientocontable.creditocuenta, cuenta.descripcion 
+		FROM cuenta INNER JOIN asientocontable ON asientocontable.debitocuenta = cuenta.id";
 
 
 	$db = new conexion();
