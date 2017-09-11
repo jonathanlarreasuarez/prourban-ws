@@ -850,6 +850,38 @@ function ListaAreas() {
 
 	return json_encode($respuesta);
 }
+
+function ListaAreasInactivas() {
+
+	//obtiene el id del usuario
+    
+    $sql = "SELECT * FROM `area` WHERE area.estado = 'INACTIVO'";
+    //$sql = "SELECT area.id, area.descripcion, area.valor, area.estado WHERE area.estado = 'Activo'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros inactivos de área!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
 function InsertarArea($descripcion, $valor, $estado) {
 	$sql = "INSERT INTO area (descripcion, valor, estado) 
 			VALUES ('$descripcion', '$valor', '$estado')";
@@ -957,28 +989,29 @@ function EliminarArea($id) {
 
 	return json_encode($respuesta);
 }
-function CambiarEstadoArea($id, $estado){
-    
-    $sql = "UPDATE `area` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
-    $db = new conexion();
+
+function CambiarEstadoArea($id) {
+	//$sql = "DELETE FROM area WHERE id=$id";
+    $sql = "UPDATE `area` SET `estado` = 'ACTIVO' WHERE `area`.`id` = '$id'";
+
+	$db = new conexion();
 	$result = $db->consulta($sql);
-	$num = $db->encontradas($result);
+    $num = $db->encontradas($result);
 
 	$respuesta->datos = [];
 	$respuesta->mensaje = "";
 	$respuesta->codigo = "";
 
-	if ($num != 0) {
+	if ($result) {
 
 		for ($i=0; $i < $num; $i++) {
 			$respuesta->datos[] = mysql_fetch_array($result);
 		}
 
-		$respuesta->mensaje = "Ok";
+		$respuesta->mensaje = "Registro activado con éxito!";
 		$respuesta->codigo = 1;
 	} else {
-		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->mensaje = "Ha ocurrido un error!";
 		$respuesta->codigo = 0;
 	}
 

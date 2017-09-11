@@ -178,6 +178,10 @@ $server->register("ListaAreas",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
+$server->register("ListaAreasInactivas",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
 $server->register("InsertarArea",
 			array('descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
@@ -195,7 +199,7 @@ $server->register("EliminarArea",
 			array('respuesta' => 'xsd:string'), $ns);
 
 $server->register("CambiarEstadoArea",
-			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('id' => 'xsd:string'),
 			array('respuesta' => 'xsd:string'), $ns);
 
 
