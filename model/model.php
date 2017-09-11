@@ -787,4 +787,31 @@ function ListaCuentas() {
 
 	return json_encode($respuesta);
 }
+
+function ListaAsiento() {
+	$sql = "SELECT * FROM asientocontable";
+
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de cuentas";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
 ?>
