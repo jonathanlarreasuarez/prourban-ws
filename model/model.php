@@ -725,7 +725,7 @@ function GuardarDetalleFactura($valor, $conceptopago_id, $factura_id) {
 	return json_encode($respuesta);
 }
 
-function GuardarAsiento($fecha, $valor, $conceptopago_id, $factura_id) {
+function GuardarAsiento($fecha, $valor, $conceptoPago, $factura_id) {
 
 	$sql = "INSERT INTO `asientocontable` (`descripcion`, `fecha`, `numero_referencia`, `debito`, `credito`, `diferencia`, `factura_id`, `cuentaxpagar_id`, `debitocuenta`, `creditocuenta`)
 					VALUES ('$conceptoPago', '$fecha', NULL, '$valor', '$valor', '0', '$factura_id', NULL, '1', '2');";
