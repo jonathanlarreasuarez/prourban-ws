@@ -139,6 +139,255 @@ $server->register("ListaAsiento",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
+//Andres
+$server->register("ListaUsuarios",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ListaUsuariose",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarUsuario",
+			array('cedula' => 'xsd:string', 'primer_nombre' => 'xsd:string', 'segundo_nombre' => 'xsd:string', 'primer_apellido' => 'xsd:string', 'segundo_apellido' => 'xsd:string', 'telefono' => 'xsd:string', 'correo' => 'xsd:string', 'nombre_usuario' => 'xsd:string', 'clave' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarUsuario",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarUsuario",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	Activa parámetros
+$server->register("ActivarUsuario",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarUsuario",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+
+
+//Areas
+$server->register("ListaAreas",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarArea",
+			array('descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarArea",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarArea",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarArea",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoArea",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+//Inmuebles
+
+$server->register("ListaInmuebles",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarInmueble",
+			array('manzana' => 'xsd:string','numero_villa' => 'xsd:string','numero_cuartos' => 'xsd:string','numero_banios' => 'xsd:string','usuario_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarInmueble",
+			array('id' => 'xsd:string','manzana' => 'xsd:string','numero_villa' => 'xsd:string','numero_cuartos' => 'xsd:string','numero_banios' => 'xsd:string','usuario_id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarInmueble",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarInmueble",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoInmueble",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+//Horario Mantenimiento
+
+$server->register("ListaHorariosmantenimiento",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarHorariosmantenimiento",
+			array('dias' => 'xsd:string','desde' => 'xsd:string','hasta' => 'xsd:string','area' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarHorariosmantenimiento",
+                        array('id' => 'xsd:string','dias' => 'xsd:string','desde' => 'xsd:string','hasta' => 'xsd:string','area' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarHorariosmantenimiento",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarHorariosmantenimiento",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoHorariosmantenimiento",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+//Horario Atención
+
+$server->register("ListaHorariosatencion",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarHorariosatencion",
+			array('dias' => 'xsd:string','desde' => 'xsd:string','hasta' => 'xsd:string','comida' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarHorariosatencion",
+		        array('dias' => 'xsd:string','desde' => 'xsd:string','hasta' => 'xsd:string','comida' => 'xsd:string','id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarHorariosatencion",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarHorariosatencion",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoHorariosatencion",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+//PARTE DE LORENA
+//Parametros
+$server->register("ListaParametros",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	Lista de usuarios Eliminados
+$server->register("ListaParametrose",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarParametro",
+			array('descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarParametro",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarParametro",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string', 'valor' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	Activa parámetros
+$server->register("ActivarParametro",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarParametro",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+//Concepto de pagos
+$server->register("ListaConceptopagos",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//	Lista de usuarios Eliminados
+$server->register("ListaConceptopagose",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarConceptopago",
+			array('descripcion' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarConceptopago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarConceptopago",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+//	Activa parámetros
+$server->register("ActivarConceptopago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarConceptopago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoConceptopago",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+//Formas de pago
+$server->register("ListaFormapagos",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+//	Lista de usuarios Eliminados
+$server->register("ListaFormapagose",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("InsertarFormapago",
+			array('descripcion' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("BuscarFormapago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ModificarFormapago",
+			array('id' => 'xsd:string', 'descripcion' => 'xsd:string', 'estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+//	Activa parámetros
+$server->register("ActivarFormapago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("EliminarFormapago",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("CambiarEstadoFormapago",
+			array('id' => 'xsd:string','estado' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+//FIN PARTE DE LORENA
+
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);
 

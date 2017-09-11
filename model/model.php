@@ -816,4 +816,1480 @@ function ListaAsiento() {
 
 	return json_encode($respuesta);
 }
+
+
+//Areas
+//------------------------------------------------------------
+function ListaAreas() {
+
+	//obtiene el id del usuario
+    
+    $sql = "SELECT * FROM `area` WHERE area.estado = 'ACTIVO'";
+    //$sql = "SELECT area.id, area.descripcion, area.valor, area.estado WHERE area.estado = 'Activo'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de areas!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarArea($descripcion, $valor, $estado) {
+	$sql = "INSERT INTO area (descripcion, valor, estado) 
+			VALUES ('$descripcion', '$valor', '$estado')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+     $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarArea($id) {
+
+	$sql = "SELECT * FROM area WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarArea($id, $descripcion, $valor, $estado) {
+    $sql = "UPDATE `area` SET `descripcion` = '$descripcion', `valor` = '$valor', `estado` = '$estado' WHERE `area`.`id` = $id";
+      
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarArea($id) {
+	//$sql = "DELETE FROM area WHERE id=$id";
+    $sql = "UPDATE `area` SET `estado` = 'INACTIVO' WHERE `area`.`id` = '$id'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoArea($id, $estado){
+    
+    $sql = "UPDATE `area` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+//Inmuebles
+//------------------------------------------------------------
+
+function ListaInmuebles() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT * FROM `inmueble` ";
+    //$sql = "SELECT * FROM `inmueble` WHERE inmueble.estado = 'Activo'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de inmuebles!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarInmueble($manzana, $numero_villa, $numero_pisos, $numero_cuartos, $numero_banios, $usuario_id) {
+	$sql = "INSERT INTO inmueble (manzana, numero_villa, numero_pisos, numero_cuartos, numero_banios, usuario_id) 
+			VALUES ('$manzana', '$numero_villa', '$numero_pisos', '$numero_cuartos', '$numero_banios', '$usuario_id')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarInmueble($id) {
+
+	$sql = "SELECT * FROM inmueble WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarInmueble($id, $manzana, $numero_villa, $numero_pisos, $numero_cuartos, $numero_banios, $usuario_id) {
+
+   //  $sql = "UPDATE proveedor SET descripcion = '$descripcion', ruc = '$ruc' WHERE proveedor.id = $id";
+     $sql = "UPDATE `inmueble` SET `manzana` = '$manzana', `numero_villa` = '$numero_villa', `numero_pisos` = '$numero_pisos', `numero_cuartos` = '$numero_cuartos', `numero_banios` = '$numero_banios', `usuario_id` = '$usuario_id' WHERE `inmueble`.`id` = $id";
+        //$sql = "UPDATE inmueble SET manzana = '$manzana', numero_villa = '$numero_villa', numero_pisos = '$numero_pisos', numero_cuartos = '$numero_cuartos', numero_banios = '$numero_banios', usuario_id = '$usuario_id' WHERE inmueble.id = $id";
+
+	/*$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);*/
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarInmueble($id) {
+	$sql = "DELETE FROM inmueble WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoInmueble($id, $estado){
+    
+    $sql = "UPDATE `inmueble` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+//HORARIO MANTENIMIENTO
+//------------------------------------------------------------
+function ListaHorariosmantenimiento() {
+
+	//$sql = "SELECT * FROM `horariomantenimiento` ";
+    $sql = "SELECT * FROM `horariomantenimiento` WHERE horariomantenimiento.estado = 'Activo'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de horarios de mantenimiento!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarHorariosmantenimiento($dias, $desde, $hasta, $area, $estado) {
+	$sql = "INSERT INTO horariomantenimiento (dias, desde, hasta, area, estado) 
+			VALUES ('$dias', '$desde', '$hasta', '$area', '$estado')";
+    
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarHorariosmantenimiento($id) {
+
+	$sql = "SELECT * FROM horariomantenimiento WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarHorariosmantenimiento($id, $dias, $desde, $hasta, $area, $estado) {
+
+    $sql = "UPDATE `horariomantenimiento` SET `dias` = '$dias', `desde` = '$desde', `hasta` = '$hasta', `area` = '$area', `estado` = '$estado' WHERE `horariomantenimiento`.`id` = $id";
+    
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarHorariosmantenimiento($id) {
+	//$sql = "DELETE FROM horariomantenimiento WHERE id=$id";
+     $sql = "UPDATE `horariomantenimiento` SET `estado` = 'Inactivo' WHERE `horariomantenimiento`.`id` = '$id'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoHorariosmantenimiento($id, $estado){
+    
+    $sql = "UPDATE `horariomantenimiento` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+//HORARIO ATENCIÓN
+//------------------------------------------------------------
+function ListaHorariosatencion() {
+
+	//obtiene el id del usuario
+	$sql = "SELECT * FROM `horarioatencion` ";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de proveedores!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarHorariosatencion($dias, $desde, $hasta, $comida) {
+	$sql = "INSERT INTO horarioatencion (dias, desde, hasta, comida) 
+			VALUES ('$dias', '$desde', '$hasta', '$comida')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarHorariosatencion($id) {
+
+	$sql = "SELECT * FROM horarioatencion WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarHorariosatencion($dias, $desde, $hasta, $comida, $id) {
+
+	$sql = "UPDATE horarioatencion SET descripcion = '$dias', desde = '$desde', hasta = '$hasta', comida = '$comida' WHERE horarioatencion.id = $id";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarHorariosatencion($id) {
+	$sql = "DELETE FROM horarioatencion WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoHorariosatencion($id, $estado){
+    
+    $sql = "UPDATE `horarioatencion` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+// FIN PARTE DE JOHANNA
+
+
+//PARTE DE LORENA
+//--- PARÁMETROS ---
+//------------------------------------------------------------
+function ListaParametros() {
+	//obtiene el id del usuario    
+    $sql = "SELECT * FROM `parametro` WHERE parametro.estado = 'ACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Parámetros listados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de parámetros !";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function ListaParametrose() {
+	$sql = "SELECT * FROM `parametro` WHERE parametro.estado = 'INACTIVO'";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Lista de parámetros desactivados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de parámetros desactivados!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function InsertarParametro($descripcion, $valor, $estado) {
+	$sql = "INSERT INTO parametro (descripcion, valor, estado) VALUES ('$descripcion', '$valor', '$estado')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+     $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Listo";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function BuscarParametro($id) {
+	$sql = "SELECT * FROM parametro WHERE id = $id";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Ok encontrado";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function ModificarParametro($id, $descripcion, $valor, $estado) {
+	$sql = "UPDATE parametro SET descripcion = '$descripcion', valor = '$valor', estado = '$estado' WHERE parametro.id = $id";
+	/*$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);*/
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function EliminarParametro($id) {
+	//$sql = "DELETE FROM area WHERE id=$id";
+    $sql = "UPDATE `parametro` SET `estado` = 'INACTIVO' WHERE `id` = '$id'";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+	if ($result) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function ActivarParametro($id) {
+	$sql = "UPDATE `parametro` SET `estado`= 'ACTIVO' WHERE id=$id";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+	if ($result) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Parámetro activado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+
+
+
+
+//--- CONCEPTO DE PAGOS ---
+//------------------------------------------------------------
+function ListaConceptopagos() {
+
+	//obtiene el id del usuario
+    
+    $sql = "SELECT * FROM `conceptopago` WHERE conceptopago.estado = 'ACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Concepto de pagos listados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de conceptos de pago!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ListaConceptopagose() {
+	$sql = "SELECT * FROM `conceptopago` WHERE conceptopago.estado = 'INACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Lista de Conceptos de pago desactivados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de Concepto de pago desactivados!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarConceptopago($descripcion, $estado) {
+	$sql = "INSERT INTO conceptopago (descripcion, estado) 
+			VALUES ('$descripcion', '$estado')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+     $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Listo";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ActivarConceptopago($id) {
+	$sql = "UPDATE `conceptopago` SET `estado`= 'ACTIVO' WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Concepto de pago activado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarConceptopago($id) {
+
+	$sql = "SELECT * FROM conceptopago WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok encontrado";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarConceptopago($id, $descripcion, $estado) {
+
+	$sql = "UPDATE conceptopago SET descripcion = '$descripcion', estado = '$estado' WHERE conceptopago.id = $id";
+
+	/*$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);*/
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No pudieron actualizarse los datos !";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarConceptopago($id) {
+	//$sql = "DELETE FROM area WHERE id=$id";
+    $sql = "UPDATE `conceptopago` SET `estado` = 'INACTIVO' WHERE `id` = '$id'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoConceptopago($id, $estado){
+    
+    $sql = "UPDATE `conceptopago` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+
+
+//--- FORMA DE PAGOS ---
+function ListaFormapagos() {
+
+	//obtiene el id del usuario
+    
+    $sql = "SELECT * FROM `formapago` WHERE formapago.estado = 'ACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Forma de pagos listados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de formas de pago!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ListaFormapagose() {
+	$sql = "SELECT * FROM `formapago` WHERE formapago.estado = 'INACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Lista de Formas de pago desactivados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de Forma de pago desactivados!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function InsertarFormapago($descripcion, $estado) {
+	$sql = "INSERT INTO formapago (descripcion, estado) 
+			VALUES ('$descripcion', '$estado')";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+     $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Listo";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ActivarFormapago($id) {
+	$sql = "UPDATE `formapago` SET `estado`= 'ACTIVO' WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Forma de pago activado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarFormapago($id) {
+
+	$sql = "SELECT * FROM formapago WHERE id = $id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok encontrado";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ModificarFormapago($id, $descripcion, $estado) {
+
+	$sql = "UPDATE formapago SET descripcion = '$descripcion', estado = '$estado' WHERE formapago.id = $id";
+
+	/*$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);*/
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No pudieron actualizarse los datos !";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarFormapago($id) {
+	//$sql = "DELETE FROM area WHERE id=$id";
+    $sql = "UPDATE `formapago` SET `estado` = 'INACTIVO' WHERE `id` = '$id'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro eliminado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function CambiarEstadoFormapago($id, $estado){
+    
+    $sql = "UPDATE `formapago` SET `estado` = '$estado' WHERE `id` = '$id'";
+    
+    $db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+//FIN PARTE DE LORENA
+
+
+
+//PARTE DE ANDRES
+//--- USUARIOS ---
+function ListaUsuarios() {
+	//obtiene el id del usuario    
+    $sql = "SELECT usuario.id, usuario.nombre_usuario, persona.primer_nombre, persona.primer_apellido, usuario.estado, rol.descripcion FROM usuario INNER JOIN persona ON usuario.persona_id = persona.id INNER JOIN rol ON usuario.rol_id = rol.id WHERE usuario.estado = 'ACTIVO'";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Usuarios listados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de usuarios !";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function ListaUsuariose() {
+	$sql = "SELECT usuario.id, usuario.nombre_usuario, persona.primer_nombre, persona.primer_apellido, usuario.estado, rol.descripcion FROM usuario INNER JOIN persona ON usuario.persona_id = persona.id INNER JOIN rol ON usuario.rol_id = rol.id WHERE usuario.estado = 'INACTIVO'";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Lista de usuarios desactivados";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de usuarios desactivados!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function InsertarUsuario($cedula, $primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido, $telefono, $correo, $nombre_usuario, $clave) {
+
+
+	$sql2 = "INSERT INTO persona (cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, correo, estado) 
+			VALUES('$cedula', '$primer_nombre', '$segundo_nombre', '$primer_apellido', '$segundo_apellido', '$telefono', '$correo', 'ACTIVO')";
+
+	$db = new conexion();
+
+	$result2 = $db->consulta($sql2);
+
+
+	$sql = "INSERT INTO usuario (nombre_usuario, clave, estado, persona_id, rol_id) 
+			VALUES('$nombre_usuario', '$clave', 'ACTIVO', (SELECT id FROM persona WHERE cedula = '$cedula'), 2)";
+
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Listo";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Datos inválidos!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function BuscarUsuario($id) {
+	$sql = "SELECT usuario.id, persona.cedula, persona.primer_nombre,persona.segundo_nombre, persona.primer_apellido, persona.segundo_apellido, persona.telefono, persona.correo, usuario.nombre_usuario, usuario.clave FROM usuario INNER JOIN persona ON usuario.persona_id = persona.id INNER JOIN rol ON usuario.rol_id = rol.id WHERE usuario.id = $id";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+		$respuesta->mensaje = "Ok encontrado";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+	return json_encode($respuesta);
+}
+function ModificarUsuario($id, $cedula, $primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido, $telefono, $correo, $nombre_usuario, $clave) {
+	
+	$sql = "UPDATE persona SET cedula = '$cedula', primer_nombre = '$primer_nombre', segundo_nombre = '$segundo_nombre', primer_apellido = '$primer_apellido', segundo_apellido = '$segundo_apellido', telefono = '$telefono', correo = '$correo', estado = '$estado', WHERE persona.id = $id";
+
+	/*$file = fopen("prourban.log", "a");
+	fwrite($file, $sql);
+	fclose($file);*/
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+    $num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Registro actualizado!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No pudieron actualizarse los datos !";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function EliminarUsuario($id) {
+	$sql = "UPDATE `usuario` SET `estado`= 'INACTIVO' WHERE id=$id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Usuario desactivado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+function ActivarUsuario($id) {
+	$sql = "UPDATE `usuario` SET `estado`= 'activo' WHERE id=$id";
+	$db = new conexion();
+	$result = $db->consulta($sql);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($result) {
+
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Usuario activado con éxito!";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "Ha ocurrido un error!";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+
 ?>
