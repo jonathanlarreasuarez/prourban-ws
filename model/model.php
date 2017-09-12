@@ -54,86 +54,86 @@ function Procesar($sql) {
 
 //Seguridad---------------------------------------------
 function Autenticacion($usuario, $clave) {
-	
+
 		$sql = "SELECT usr.id, usr.nombre_usuario, per.primer_nombre, per.primer_apellido FROM usuario usr
 				INNER JOIN persona per ON per.id = usr.persona_id
 				WHERE usr.nombre_usuario = '$usuario' AND usr.clave = '$clave'";
-	
-	
-	
+
+
+
 		$db = new conexion();
 		$resul = $db->consulta($sql);
 		$num = $db->encontradas($resul);
-	
+
 		$respuesta->datos = [];
 		$respuesta->datos_modulo = [];
 		$respuesta->datos_opcion = [];
 		$respuesta->mensaje = "";
 		$respuesta->codigo = "";
 		$id_usuario = "";
-	
+
 		if ($num != 0) {
-	
+
 			for ($i=0; $i < $num; $i++) {
-	
+
 				$data = mysql_fetch_array($resul);
-	
+
 				$id_usuario = $data[0];
-	
+
 				$respuesta->datos[] = $data;
 			}
-	
+
 			$sql_modulo = "SELECT modul.id, modul.descripcion, modul.iconclass FROM modulo modul
 				INNER JOIN opcion opc ON opc.modulo_id = modul.id
 				INNER JOIN opcionxrol opcrol ON opcrol.opcion_id = opc.id
 				INNER JOIN usuario usu ON usu.rol_id = opcrol.rol_id
 				WHERE usu.id = '$id_usuario'
 				GROUP BY modul.id ORDER BY modul.descripcion ASC";
-	
+
 			$resul_modul = $db->consulta($sql_modulo);
 			$num_modul = $db->encontradas($resul_modul);
-	
+
 			if ($num_modul != 0) {
-	
+
 				for ($i=0; $i < $num_modul; $i++) {
 					$respuesta->datos_modulo[] = mysql_fetch_array($resul_modul);
 				}
-	
+
 			}
-	
+
 			$sql_opcion = "SELECT opc.id, opc.nombre, opc.url, opc.modulo_id FROM opcion opc
 				INNER JOIN opcionxrol opcrol ON opcrol.opcion_id = opc.id
 				INNER JOIN usuario usu ON usu.rol_id = opcrol.rol_id
 				WHERE usu.id = '$id_usuario'";
-	
+
 			$resul_opc = $db->consulta($sql_opcion);
 			$num_opc = $db->encontradas($resul_opc);
-	
+
 			if ($num_opc != 0) {
-	
+
 				for ($i=0; $i < $num_opc; $i++) {
 					$respuesta->datos_opcion[] = mysql_fetch_array($resul_opc);
 				}
-	
+
 			}
-	
+
 			$respuesta->mensaje = "ok";
 			$respuesta->codigo = 1;
-	
+
 		} else {
-	
+
 			$respuesta->mensaje = "Usuario o password incorrecto.";
 			$respuesta->codigo = 0;
-	
+
 		}
-	
+
 		return json_encode($respuesta);
-	
+
 	}
-	
+
 	//  Devuelve lista de usuarios
 	function ListaUsuario() {
-	
+
 		$sql = "SELECT usu.*, CONCAT_WS(' ', per.primer_nombre, per.primer_apellido) as nombre_completo, usu.nombre_usuario, rol.descripcion FROM usuario usu
 				INNER JOIN rol rol ON rol.id = usu.rol_id
 				INNER JOIN persona per ON per.id = usu.persona_id";
@@ -155,10 +155,10 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	//  Devuelve lista de personas
 	function ListaPersona() {
-	
+
 		$sql = "SELECT * FROM persona";
 		$db = new conexion();
 		$result = $db->consulta($sql);
@@ -178,101 +178,101 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	//inserta nuevo usuario
-	function InsertarUsuario($nombre_usuario,$clave,$persona_id,$rol_id) {
-		$sql = "INSERT INTO usuario (nombre_usuario,clave,persona_id,rol_id)
-				VALUES ('$nombre_usuario','$clave','$persona_id','$rol_id')";
-		$db = new conexion();
-		$result = $db->consulta($sql);
-		$respuesta->datos = [];
-		$respuesta->mensaje = "";
-		$respuesta->codigo = "";
-		if ($result) {
-			for ($i=0; $i < $num; $i++) {
-				$respuesta->datos[] = mysql_fetch_array($result);
-			}
-			$respuesta->mensaje = "Ok";
-			$respuesta->codigo = 1;
-		} else {
-			$respuesta->mensaje = "Datos no válidos.";
-			$respuesta->codigo = 0;
-		}
-		return json_encode($respuesta);
-	}
-	
-	//  Buscar Usuario
-	function BuscarUsuario($id) {
-		$sql = "SELECT * FROM usuario WHERE id = $id";
-		$db = new conexion();
-		$result = $db->consulta($sql);
-		$num = $db->encontradas($result);
-		$respuesta->datos = [];
-		$respuesta->mensaje = "";
-		$respuesta->codigo = "";
-		if ($num != 0) {
-			for ($i=0; $i < $num; $i++) {
-				$respuesta->datos[] = mysql_fetch_array($result);
-			}
-			$respuesta->mensaje = "Ok";
-			$respuesta->codigo = 1;
-		} else {
-			$respuesta->mensaje = "Sin resultados.";
-			$respuesta->codigo = 0;
-		}
-		return json_encode($respuesta);
-	}
-	
-	// Modificar Usuario
-	function ModificarUsuario($id, $nombre_usuario,$clave, $persona_id, $rol_id) {
-		$sql = "UPDATE usuario SET nombre_usuario = '$nombre_usuario', clave = '$clave', persona_id = '$persona_id',rol_id = '$rol_id' WHERE id = $id";
-		$file = fopen("prourban.log", "a");
-		fwrite($file, $sql);
-		fclose($file);
-		$db = new conexion();
-		$result = $db->consulta($sql);
-		$respuesta->datos = [];
-		$respuesta->mensaje = "";
-		$respuesta->codigo = "";
-		if ($result) {
-			for ($i=0; $i < $num; $i++) {
-				$respuesta->datos[] = mysql_fetch_array($result);
-			}
-			$respuesta->mensaje = "Registro actualizado.";
-			$respuesta->codigo = 1;
-		} else {
-			$respuesta->mensaje = "Datos no válidos.";
-			$respuesta->codigo = 0;
-		}
-		return json_encode($respuesta);
-	}
-	
-	// Eliminar Usuario
-	function EliminarUsuario($id) {
-		$sql = "DELETE FROM usuario WHERE id=$id";
-		$db = new conexion();
-		$result = $db->consulta($sql);
-		$respuesta->datos = [];
-		$respuesta->mensaje = "";
-		$respuesta->codigo = "";
-		if ($result) {
-			for ($i=0; $i < $num; $i++) {
-				$respuesta->datos[] = mysql_fetch_array($result);
-			}
-			$respuesta->mensaje = "Registro eliminado con éxito.";
-			$respuesta->codigo = 1;
-		} else {
-			$respuesta->mensaje = "Ha ocurrido un error.";
-			$respuesta->codigo = 0;
-		}
-		return json_encode($respuesta);
-	}
-	
-	
-	
+	// function InsertarUsuario($nombre_usuario,$clave,$persona_id,$rol_id) {
+	// 	$sql = "INSERT INTO usuario (nombre_usuario,clave,persona_id,rol_id)
+	// 			VALUES ('$nombre_usuario','$clave','$persona_id','$rol_id')";
+	// 	$db = new conexion();
+	// 	$result = $db->consulta($sql);
+	// 	$respuesta->datos = [];
+	// 	$respuesta->mensaje = "";
+	// 	$respuesta->codigo = "";
+	// 	if ($result) {
+	// 		for ($i=0; $i < $num; $i++) {
+	// 			$respuesta->datos[] = mysql_fetch_array($result);
+	// 		}
+	// 		$respuesta->mensaje = "Ok";
+	// 		$respuesta->codigo = 1;
+	// 	} else {
+	// 		$respuesta->mensaje = "Datos no válidos.";
+	// 		$respuesta->codigo = 0;
+	// 	}
+	// 	return json_encode($respuesta);
+	// }
+	//
+	// //  Buscar Usuario
+	// function BuscarUsuario($id) {
+	// 	$sql = "SELECT * FROM usuario WHERE id = $id";
+	// 	$db = new conexion();
+	// 	$result = $db->consulta($sql);
+	// 	$num = $db->encontradas($result);
+	// 	$respuesta->datos = [];
+	// 	$respuesta->mensaje = "";
+	// 	$respuesta->codigo = "";
+	// 	if ($num != 0) {
+	// 		for ($i=0; $i < $num; $i++) {
+	// 			$respuesta->datos[] = mysql_fetch_array($result);
+	// 		}
+	// 		$respuesta->mensaje = "Ok";
+	// 		$respuesta->codigo = 1;
+	// 	} else {
+	// 		$respuesta->mensaje = "Sin resultados.";
+	// 		$respuesta->codigo = 0;
+	// 	}
+	// 	return json_encode($respuesta);
+	// }
+	//
+	// // Modificar Usuario
+	// function ModificarUsuario($id, $nombre_usuario,$clave, $persona_id, $rol_id) {
+	// 	$sql = "UPDATE usuario SET nombre_usuario = '$nombre_usuario', clave = '$clave', persona_id = '$persona_id',rol_id = '$rol_id' WHERE id = $id";
+	// 	$file = fopen("prourban.log", "a");
+	// 	fwrite($file, $sql);
+	// 	fclose($file);
+	// 	$db = new conexion();
+	// 	$result = $db->consulta($sql);
+	// 	$respuesta->datos = [];
+	// 	$respuesta->mensaje = "";
+	// 	$respuesta->codigo = "";
+	// 	if ($result) {
+	// 		for ($i=0; $i < $num; $i++) {
+	// 			$respuesta->datos[] = mysql_fetch_array($result);
+	// 		}
+	// 		$respuesta->mensaje = "Registro actualizado.";
+	// 		$respuesta->codigo = 1;
+	// 	} else {
+	// 		$respuesta->mensaje = "Datos no válidos.";
+	// 		$respuesta->codigo = 0;
+	// 	}
+	// 	return json_encode($respuesta);
+	// }
+	//
+	// // Eliminar Usuario
+	// function EliminarUsuario($id) {
+	// 	$sql = "DELETE FROM usuario WHERE id=$id";
+	// 	$db = new conexion();
+	// 	$result = $db->consulta($sql);
+	// 	$respuesta->datos = [];
+	// 	$respuesta->mensaje = "";
+	// 	$respuesta->codigo = "";
+	// 	if ($result) {
+	// 		for ($i=0; $i < $num; $i++) {
+	// 			$respuesta->datos[] = mysql_fetch_array($result);
+	// 		}
+	// 		$respuesta->mensaje = "Registro eliminado con éxito.";
+	// 		$respuesta->codigo = 1;
+	// 	} else {
+	// 		$respuesta->mensaje = "Ha ocurrido un error.";
+	// 		$respuesta->codigo = 0;
+	// 	}
+	// 	return json_encode($respuesta);
+	// }
+
+
+
 	//  Devuelve lista de opciones
 	function ListaOpciones($rol_id) {
-	
+
 		$sql = "SELECT * FROM modulo";
 		$db = new conexion();
 		$result = $db->consulta($sql);
@@ -286,29 +286,29 @@ function Autenticacion($usuario, $clave) {
 			for ($i=0; $i < $num; $i++) {
 				$respuesta->datos_modulo[] = mysql_fetch_array($result);
 			}
-	
+
 			$sql = "SELECT * FROM opcion";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcion[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$sql = "SELECT * FROM opcionxrol WHERE rol_id = $rol_id";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcionxrol[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$respuesta->mensaje = "Ok";
 			$respuesta->codigo = 1;
 		} else {
@@ -317,9 +317,9 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	function getOpciones() {
-	
+
 		$sql = "SELECT * FROM modulo";
 		$db = new conexion();
 		$result = $db->consulta($sql);
@@ -333,29 +333,29 @@ function Autenticacion($usuario, $clave) {
 			for ($i=0; $i < $num; $i++) {
 				$respuesta->datos_modulo[] = mysql_fetch_array($result);
 			}
-	
+
 			$sql = "SELECT * FROM opcion";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcion[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$sql = "SELECT * FROM opcionxrol";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcionxrol[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$respuesta->mensaje = "Ok";
 			$respuesta->codigo = 1;
 		} else {
@@ -364,10 +364,10 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
-	
+
+
 	function ListaOpcionesRol($rol_id) {
-	
+
 		$sql = "SELECT * FROM modulo";
 		$db = new conexion();
 		$result = $db->consulta($sql);
@@ -381,29 +381,29 @@ function Autenticacion($usuario, $clave) {
 			for ($i=0; $i < $num; $i++) {
 				$respuesta->datos_modulo[] = mysql_fetch_array($result);
 			}
-	
+
 			$sql = "SELECT * FROM opcion";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcion[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$sql = "SELECT * FROM opcionxrol WHERE rol_id = $rol_id";
 			$db = new conexion();
 			$result = $db->consulta($sql);
 			$num = $db->encontradas($result);
-	
+
 			if ($num != 0) {
 				for ($i=0; $i < $num; $i++) {
 					$respuesta->datos_opcionxrol[] = mysql_fetch_array($result);
 				}
 			}
-	
+
 			$respuesta->mensaje = "Ok";
 			$respuesta->codigo = 1;
 		} else {
@@ -412,12 +412,12 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	//  inserta nuevo rol
 	function AsignarOpciones($id,$rol_id,$opcion_id,$estado) {
-	
+
 		if ($id == "") {
-	
+
 			$sql = "INSERT INTO opcionxrol (opcion_id, rol_id)
 				VALUES ('$opcion_id', '$rol_id')";
 			$db = new conexion();
@@ -436,15 +436,15 @@ function Autenticacion($usuario, $clave) {
 				$respuesta->codigo = 0;
 			}
 			return json_encode($respuesta);
-	
+
 		} else {
-	
+
 			if ($estado == "1") {
-	
+
 				$sql = "DELETE FROM opcionxrol WHERE id=$id";
 				$db = new conexion();
 				$result = $db->consulta($sql);
-	
+
 				if ($result) {
 					for ($i=0; $i < $num; $i++) {
 						$respuesta->datos[] = mysql_fetch_array($result);
@@ -456,17 +456,17 @@ function Autenticacion($usuario, $clave) {
 					$respuesta->codigo = 0;
 				}
 				return json_encode($respuesta);
-	
+
 			}
-	
+
 		}
-	
-	
+
+
 	}
-	
+
 	//  Devuelve lista de roles
 	function ListaRol() {
-	
+
 		$sql = "SELECT * FROM rol where estado = 1";
 		$db = new conexion();
 		$result = $db->consulta($sql);
@@ -507,7 +507,7 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	//  Buscar rol
 	function BuscarRol($id) {
 		$sql = "SELECT * FROM rol WHERE id = $id";
@@ -529,7 +529,7 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	// Modificar Rol
 	function ModificarRol($id, $descripcion) {
 		$sql = "UPDATE rol SET descripcion = '$descripcion' WHERE id = $id";
@@ -553,7 +553,7 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	// Eliminar Rol
 	function EliminarRol($id) {
 		$sql = "UPDATE rol SET estado = '2' WHERE id = $id";
@@ -574,7 +574,7 @@ function Autenticacion($usuario, $clave) {
 		}
 		return json_encode($respuesta);
 	}
-	
+
 	//Seguridad---------------------------------------------
 
 
@@ -1250,8 +1250,8 @@ function ListaCuentas() {
 }
 
 function ListaAsiento() {
-	$sql = "SELECT asientocontable.descripcion, asientocontable.fecha, asientocontable.numero_referencia, asientocontable.debito, asientocontable.credito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.debitocuenta, asientocontable.creditocuenta, cuenta.descripcion, tipocuenta.descripcion FROM cuenta INNER JOIN asientocontable 
-		ON asientocontable.debitocuenta = cuenta.id OR asientocontable.creditocuenta = cuenta.id 
+	$sql = "SELECT asientocontable.descripcion, asientocontable.fecha, asientocontable.numero_referencia, asientocontable.debito, asientocontable.credito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.debitocuenta, asientocontable.creditocuenta, cuenta.descripcion, tipocuenta.descripcion FROM cuenta INNER JOIN asientocontable
+		ON asientocontable.debitocuenta = cuenta.id OR asientocontable.creditocuenta = cuenta.id
 		INNER JOIN tipocuenta ON tipocuenta.id = cuenta.tipocuenta_id";
 
 
@@ -1284,7 +1284,7 @@ function ListaAsiento() {
 function ListaAreas() {
 
 	//obtiene el id del usuario
-    
+
     $sql = "SELECT * FROM `area` WHERE area.estado = 'ACTIVO'";
     //$sql = "SELECT area.id, area.descripcion, area.valor, area.estado WHERE area.estado = 'Activo'";
 
@@ -1315,7 +1315,7 @@ function ListaAreas() {
 function ListaAreasInactivas() {
 
 	//obtiene el id del usuario
-    
+
     $sql = "SELECT * FROM `area` WHERE area.estado = 'INACTIVO'";
     //$sql = "SELECT area.id, area.descripcion, area.valor, area.estado WHERE area.estado = 'Activo'";
 
@@ -1344,7 +1344,7 @@ function ListaAreasInactivas() {
 }
 
 function InsertarArea($descripcion, $valor, $estado) {
-	$sql = "INSERT INTO area (descripcion, valor, estado) 
+	$sql = "INSERT INTO area (descripcion, valor, estado)
 			VALUES ('$descripcion', '$valor', '$estado')";
 
 	$db = new conexion();
@@ -1399,7 +1399,7 @@ function BuscarArea($id) {
 }
 function ModificarArea($id, $descripcion, $valor, $estado) {
     $sql = "UPDATE `area` SET `descripcion` = '$descripcion', `valor` = '$valor', `estado` = '$estado' WHERE `area`.`id` = $id";
-      
+
 	$db = new conexion();
 	$result = $db->consulta($sql);
     $num = $db->encontradas($result);
@@ -1512,7 +1512,7 @@ function ListaInmuebles() {
 	return json_encode($respuesta);
 }
 function InsertarInmueble($manzana, $numero_villa, $numero_pisos, $numero_cuartos, $numero_banios, $usuario_id) {
-	$sql = "INSERT INTO inmueble (manzana, numero_villa, numero_pisos, numero_cuartos, numero_banios, usuario_id) 
+	$sql = "INSERT INTO inmueble (manzana, numero_villa, numero_pisos, numero_cuartos, numero_banios, usuario_id)
 			VALUES ('$manzana', '$numero_villa', '$numero_pisos', '$numero_cuartos', '$numero_banios', '$usuario_id')";
 
 	$db = new conexion();
@@ -1623,9 +1623,9 @@ function EliminarInmueble($id) {
 	return json_encode($respuesta);
 }
 function CambiarEstadoInmueble($id, $estado){
-    
+
     $sql = "UPDATE `inmueble` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
+
     $db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -1681,9 +1681,9 @@ function ListaHorariosmantenimiento() {
 	return json_encode($respuesta);
 }
 function InsertarHorariosmantenimiento($dias, $desde, $hasta, $area, $estado) {
-	$sql = "INSERT INTO horariomantenimiento (dias, desde, hasta, area, estado) 
+	$sql = "INSERT INTO horariomantenimiento (dias, desde, hasta, area, estado)
 			VALUES ('$dias', '$desde', '$hasta', '$area', '$estado')";
-    
+
 	$db = new conexion();
 	$result = $db->consulta($sql);
 
@@ -1736,7 +1736,7 @@ function BuscarHorariosmantenimiento($id) {
 function ModificarHorariosmantenimiento($id, $dias, $desde, $hasta, $area, $estado) {
 
     $sql = "UPDATE `horariomantenimiento` SET `dias` = '$dias', `desde` = '$desde', `hasta` = '$hasta', `area` = '$area', `estado` = '$estado' WHERE `horariomantenimiento`.`id` = $id";
-    
+
 
 	$db = new conexion();
 	$result = $db->consulta($sql);
@@ -1788,9 +1788,9 @@ function EliminarHorariosmantenimiento($id) {
 	return json_encode($respuesta);
 }
 function CambiarEstadoHorariosmantenimiento($id, $estado){
-    
+
     $sql = "UPDATE `horariomantenimiento` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
+
     $db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -1846,7 +1846,7 @@ function ListaHorariosatencion() {
 	return json_encode($respuesta);
 }
 function InsertarHorariosatencion($dias, $desde, $hasta, $comida) {
-	$sql = "INSERT INTO horarioatencion (dias, desde, hasta, comida) 
+	$sql = "INSERT INTO horarioatencion (dias, desde, hasta, comida)
 			VALUES ('$dias', '$desde', '$hasta', '$comida')";
 
 	$db = new conexion();
@@ -1950,9 +1950,9 @@ function EliminarHorariosatencion($id) {
 	return json_encode($respuesta);
 }
 function CambiarEstadoHorariosatencion($id, $estado){
-    
+
     $sql = "UPDATE `horarioatencion` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
+
     $db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -1983,7 +1983,7 @@ function CambiarEstadoHorariosatencion($id, $estado){
 //--- PARÁMETROS ---
 //------------------------------------------------------------
 function ListaParametros() {
-	//obtiene el id del usuario    
+	//obtiene el id del usuario
     $sql = "SELECT * FROM `parametro` WHERE parametro.estado = 'ACTIVO'";
 
 	$db = new conexion();
@@ -2152,7 +2152,7 @@ function ActivarParametro($id) {
 function ListaConceptopagos() {
 
 	//obtiene el id del usuario
-    
+
     $sql = "SELECT * FROM `conceptopago` WHERE conceptopago.estado = 'ACTIVO'";
 
 	$db = new conexion();
@@ -2205,7 +2205,7 @@ function ListaConceptopagose() {
 	return json_encode($respuesta);
 }
 function InsertarConceptopago($descripcion, $estado) {
-	$sql = "INSERT INTO conceptopago (descripcion, estado) 
+	$sql = "INSERT INTO conceptopago (descripcion, estado)
 			VALUES ('$descripcion', '$estado')";
 
 	$db = new conexion();
@@ -2342,9 +2342,9 @@ function EliminarConceptopago($id) {
 	return json_encode($respuesta);
 }
 function CambiarEstadoConceptopago($id, $estado){
-    
+
     $sql = "UPDATE `conceptopago` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
+
     $db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -2375,7 +2375,7 @@ function CambiarEstadoConceptopago($id, $estado){
 function ListaFormapagos() {
 
 	//obtiene el id del usuario
-    
+
     $sql = "SELECT * FROM `formapago` WHERE formapago.estado = 'ACTIVO'";
 
 	$db = new conexion();
@@ -2428,7 +2428,7 @@ function ListaFormapagose() {
 	return json_encode($respuesta);
 }
 function InsertarFormapago($descripcion, $estado) {
-	$sql = "INSERT INTO formapago (descripcion, estado) 
+	$sql = "INSERT INTO formapago (descripcion, estado)
 			VALUES ('$descripcion', '$estado')";
 
 	$db = new conexion();
@@ -2565,9 +2565,9 @@ function EliminarFormapago($id) {
 	return json_encode($respuesta);
 }
 function CambiarEstadoFormapago($id, $estado){
-    
+
     $sql = "UPDATE `formapago` SET `estado` = '$estado' WHERE `id` = '$id'";
-    
+
     $db = new conexion();
 	$result = $db->consulta($sql);
 	$num = $db->encontradas($result);
@@ -2599,7 +2599,7 @@ function CambiarEstadoFormapago($id, $estado){
 //PARTE DE ANDRES
 //--- USUARIOS ---
 function ListaUsuarios() {
-	//obtiene el id del usuario    
+	//obtiene el id del usuario
     $sql = "SELECT usuario.id, usuario.nombre_usuario, persona.primer_nombre, persona.primer_apellido, usuario.estado, rol.descripcion FROM usuario INNER JOIN persona ON usuario.persona_id = persona.id INNER JOIN rol ON usuario.rol_id = rol.id WHERE usuario.estado = 'ACTIVO'";
 
 	$db = new conexion();
@@ -2649,7 +2649,7 @@ function ListaUsuariose() {
 function InsertarUsuario($cedula, $primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido, $telefono, $correo, $nombre_usuario, $clave) {
 
 
-	$sql2 = "INSERT INTO persona (cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, correo, estado) 
+	$sql2 = "INSERT INTO persona (cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, telefono, correo, estado)
 			VALUES('$cedula', '$primer_nombre', '$segundo_nombre', '$primer_apellido', '$segundo_apellido', '$telefono', '$correo', 'ACTIVO')";
 
 	$db = new conexion();
@@ -2657,7 +2657,7 @@ function InsertarUsuario($cedula, $primer_nombre, $segundo_nombre, $primer_apell
 	$result2 = $db->consulta($sql2);
 
 
-	$sql = "INSERT INTO usuario (nombre_usuario, clave, estado, persona_id, rol_id) 
+	$sql = "INSERT INTO usuario (nombre_usuario, clave, estado, persona_id, rol_id)
 			VALUES('$nombre_usuario', '$clave', 'ACTIVO', (SELECT id FROM persona WHERE cedula = '$cedula'), 2)";
 
 	$result = $db->consulta($sql);
@@ -2705,7 +2705,7 @@ function BuscarUsuario($id) {
 	return json_encode($respuesta);
 }
 function ModificarUsuario($id, $cedula, $primer_nombre, $segundo_nombre, $primer_apellido, $segundo_apellido, $telefono, $correo, $nombre_usuario, $clave) {
-	
+
 	$sql = "UPDATE persona SET cedula = '$cedula', primer_nombre = '$primer_nombre', segundo_nombre = '$segundo_nombre', primer_apellido = '$primer_apellido', segundo_apellido = '$segundo_apellido', telefono = '$telefono', correo = '$correo', estado = '$estado', WHERE persona.id = $id";
 
 	/*$file = fopen("prourban.log", "a");
