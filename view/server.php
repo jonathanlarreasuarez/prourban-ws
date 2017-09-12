@@ -14,16 +14,85 @@ $server = new soap_server;
 $ns = $_SERVER["DOCUMENT_ROOT"] . "/prourban-ws/view/server.php";
 $server->configurewsdl('ProurbanWSDL', $ns);
 
-//	USUARIO
-$server->register("Autenticacion",
-			array('usuario' => 'xsd:string', 'clave' => 'xsd:string'),
-			array('respuesta' => 'xsd:string'), $ns);
+//Seguridad---------------------------------------------
 
+//	Obtiene un usuario
+$server->register("Autenticacion",
+array('usuario' => 'xsd:string', 'clave' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
 
 //	Lista de usuarios recibe usuario y contraseña para validar logueo
-$server->register("CargaMenu",
-			array('usuario_id' => 'xsd:string'),
-			array('respuesta' => 'xsd:string'), $ns);
+
+//	Lista de opciones
+$server->register("ListaOpciones",
+array('rol_id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ListaOpcionesRol",
+array('rol_id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("getOpciones",
+array(),
+array('respuesta' => 'xsd:string'), $ns);
+
+//	Busca rol
+$server->register("BuscarRol",
+array('id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+//	Modifica rol
+$server->register("AsignarOpciones",
+array('id' => 'xsd:string', 'rol_id' => 'xsd:string', 'opcion_id' => 'xsd:string', 'estado' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+//	Crea rol
+$server->register("InsertarRol",
+array('descripcion' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+//	Modifica rol
+$server->register("ModificarRol",
+array('id' => 'xsd:string', 'descripcion' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+//	Elimina rol
+$server->register("EliminarRol",
+array('id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+//	Lista de Rol
+$server->register("ListaRol",
+array(),
+array('respuesta' => 'xsd:string'), $ns);
+
+
+
+$server->register("BuscarUsuario",
+array('id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+//	Crea rol
+$server->register("InsertarUsuario",
+array('nombre_usuario' => 'xsd:string','clave' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+//	Modifica rol
+$server->register("ModificarUsuario",
+array('id' => 'xsd:string', 'nombre_usuario' => 'xsd:string', 'clave' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+//	Elimina rol
+$server->register("EliminarUsuario",
+array('id' => 'xsd:string'),
+array('respuesta' => 'xsd:string'), $ns);
+
+
+$server->register("ListaUsuario",
+array(),
+array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ListaPersona",
+array(),
+array('respuesta' => 'xsd:string'), $ns);
+
+//Seguridad---------------------------------------------
 
 
 //	PROVEEDOR
