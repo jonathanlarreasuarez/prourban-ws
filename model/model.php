@@ -1248,11 +1248,41 @@ function ListaCuentas() {
 
 	return json_encode($respuesta);
 }
+function ListaAsientoDebito() {
+	$sql = "SELECT asientocontable.descripcion, asientocontable.fecha, asientocontable.numero_referencia, 
+	asientocontable.debito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.debitocuenta,
+	cuenta.descripcion AS descripcion_debitocuenta FROM asientocontable 
+	INNER JOIN cuenta ON cuenta.id = asientocontable.debitocuenta";
 
-function ListaAsiento() {
-	$sql = "SELECT asientocontable.descripcion, asientocontable.fecha, asientocontable.numero_referencia, asientocontable.debito, asientocontable.credito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.debitocuenta, asientocontable.creditocuenta, cuenta.descripcion, tipocuenta.descripcion FROM cuenta INNER JOIN asientocontable
-		ON asientocontable.debitocuenta = cuenta.id OR asientocontable.creditocuenta = cuenta.id
-		INNER JOIN tipocuenta ON tipocuenta.id = cuenta.tipocuenta_id";
+
+	$db = new conexion();
+	$result = $db->consulta($sql);
+	$num = $db->encontradas($result);
+
+	$respuesta->datos = [];
+	$respuesta->mensaje = "";
+	$respuesta->codigo = "";
+
+	if ($num != 0) {
+		for ($i=0; $i < $num; $i++) {
+			$respuesta->datos[] = mysql_fetch_array($result);
+		}
+
+		$respuesta->mensaje = "Ok";
+		$respuesta->codigo = 1;
+	} else {
+		$respuesta->mensaje = "No existen registros de cuentas";
+		$respuesta->codigo = 0;
+	}
+
+	return json_encode($respuesta);
+}
+
+function ListaAsientoCredito() {
+	$sql = "SELECT asientocontable.descripcion, asientocontable.numero_referencia, 
+	asientocontable.credito, asientocontable.factura_id, asientocontable.cuentaxpagar_id, asientocontable.creditocuenta,
+	cuenta.descripcion AS descripcion_creditocuenta FROM asientocontable 
+	INNER JOIN cuenta ON cuenta.id = asientocontable.creditocuenta";
 
 
 	$db = new conexion();

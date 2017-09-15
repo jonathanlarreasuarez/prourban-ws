@@ -204,7 +204,11 @@ $server->register("ListaCuentas",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
-$server->register("ListaAsiento",
+$server->register("ListaAsientoDebito",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("ListaAsientoCredito",
 			array(),
 			array('respuesta' => 'xsd:string'), $ns);
 
