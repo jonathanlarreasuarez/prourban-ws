@@ -66,20 +66,20 @@ array('respuesta' => 'xsd:string'), $ns);
 
 
 
-$server->register("BuscarUsuario",
+$server->register("BuscarUsuarioSeg",
 array('id' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 
 //	Crea rol
-$server->register("InsertarUsuario",
+$server->register("InsertarUsuarioSeg",
 array('nombre_usuario' => 'xsd:string','clave' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 //	Modifica rol
-$server->register("ModificarUsuario",
+$server->register("ModificarUsuarioSeg",
 array('id' => 'xsd:string', 'nombre_usuario' => 'xsd:string', 'clave' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 //	Elimina rol
-$server->register("EliminarUsuario",
+$server->register("EliminarUsuarioSeg",
 array('id' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 

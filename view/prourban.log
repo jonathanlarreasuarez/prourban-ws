@@ -1,1 +1,1 @@
-No se ha podido realizar el pago de la reserva
+No se ha podido realizar el pago de la reservaUPDATE rol SET descripcion = 'SISTEMAS' WHERE id = 5UPDATE rol SET descripcion = 'SISTEMAS2' WHERE id = 1UPDATE rol SET descripcion = 'SISTEMAS' WHERE id = 1

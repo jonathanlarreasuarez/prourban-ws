@@ -180,93 +180,93 @@ function Autenticacion($usuario, $clave) {
 	}
 
 	//inserta nuevo usuario
-	// function InsertarUsuario($nombre_usuario,$clave,$persona_id,$rol_id) {
-	// 	$sql = "INSERT INTO usuario (nombre_usuario,clave,persona_id,rol_id)
-	// 			VALUES ('$nombre_usuario','$clave','$persona_id','$rol_id')";
-	// 	$db = new conexion();
-	// 	$result = $db->consulta($sql);
-	// 	$respuesta->datos = [];
-	// 	$respuesta->mensaje = "";
-	// 	$respuesta->codigo = "";
-	// 	if ($result) {
-	// 		for ($i=0; $i < $num; $i++) {
-	// 			$respuesta->datos[] = mysql_fetch_array($result);
-	// 		}
-	// 		$respuesta->mensaje = "Ok";
-	// 		$respuesta->codigo = 1;
-	// 	} else {
-	// 		$respuesta->mensaje = "Datos no válidos.";
-	// 		$respuesta->codigo = 0;
-	// 	}
-	// 	return json_encode($respuesta);
-	// }
-	//
-	// //  Buscar Usuario
-	// function BuscarUsuario($id) {
-	// 	$sql = "SELECT * FROM usuario WHERE id = $id";
-	// 	$db = new conexion();
-	// 	$result = $db->consulta($sql);
-	// 	$num = $db->encontradas($result);
-	// 	$respuesta->datos = [];
-	// 	$respuesta->mensaje = "";
-	// 	$respuesta->codigo = "";
-	// 	if ($num != 0) {
-	// 		for ($i=0; $i < $num; $i++) {
-	// 			$respuesta->datos[] = mysql_fetch_array($result);
-	// 		}
-	// 		$respuesta->mensaje = "Ok";
-	// 		$respuesta->codigo = 1;
-	// 	} else {
-	// 		$respuesta->mensaje = "Sin resultados.";
-	// 		$respuesta->codigo = 0;
-	// 	}
-	// 	return json_encode($respuesta);
-	// }
-	//
-	// // Modificar Usuario
-	// function ModificarUsuario($id, $nombre_usuario,$clave, $persona_id, $rol_id) {
-	// 	$sql = "UPDATE usuario SET nombre_usuario = '$nombre_usuario', clave = '$clave', persona_id = '$persona_id',rol_id = '$rol_id' WHERE id = $id";
-	// 	$file = fopen("prourban.log", "a");
-	// 	fwrite($file, $sql);
-	// 	fclose($file);
-	// 	$db = new conexion();
-	// 	$result = $db->consulta($sql);
-	// 	$respuesta->datos = [];
-	// 	$respuesta->mensaje = "";
-	// 	$respuesta->codigo = "";
-	// 	if ($result) {
-	// 		for ($i=0; $i < $num; $i++) {
-	// 			$respuesta->datos[] = mysql_fetch_array($result);
-	// 		}
-	// 		$respuesta->mensaje = "Registro actualizado.";
-	// 		$respuesta->codigo = 1;
-	// 	} else {
-	// 		$respuesta->mensaje = "Datos no válidos.";
-	// 		$respuesta->codigo = 0;
-	// 	}
-	// 	return json_encode($respuesta);
-	// }
-	//
-	// // Eliminar Usuario
-	// function EliminarUsuario($id) {
-	// 	$sql = "DELETE FROM usuario WHERE id=$id";
-	// 	$db = new conexion();
-	// 	$result = $db->consulta($sql);
-	// 	$respuesta->datos = [];
-	// 	$respuesta->mensaje = "";
-	// 	$respuesta->codigo = "";
-	// 	if ($result) {
-	// 		for ($i=0; $i < $num; $i++) {
-	// 			$respuesta->datos[] = mysql_fetch_array($result);
-	// 		}
-	// 		$respuesta->mensaje = "Registro eliminado con éxito.";
-	// 		$respuesta->codigo = 1;
-	// 	} else {
-	// 		$respuesta->mensaje = "Ha ocurrido un error.";
-	// 		$respuesta->codigo = 0;
-	// 	}
-	// 	return json_encode($respuesta);
-	// }
+	function InsertarUsuarioSeg($nombre_usuario,$clave,$persona_id,$rol_id) {
+		$sql = "INSERT INTO usuario (nombre_usuario,clave,persona_id,rol_id)
+				VALUES ('$nombre_usuario','$clave','$persona_id','$rol_id')";
+		$db = new conexion();
+		$result = $db->consulta($sql);
+		$respuesta->datos = [];
+		$respuesta->mensaje = "";
+		$respuesta->codigo = "";
+		if ($result) {
+			for ($i=0; $i < $num; $i++) {
+				$respuesta->datos[] = mysql_fetch_array($result);
+			}
+			$respuesta->mensaje = "Ok";
+			$respuesta->codigo = 1;
+		} else {
+			$respuesta->mensaje = "Datos no válidos.";
+			$respuesta->codigo = 0;
+		}
+		return json_encode($respuesta);
+	}
+
+	//  Buscar Usuario
+	function BuscarUsuarioSeg($id) {
+		$sql = "SELECT * FROM usuario WHERE id = $id";
+		$db = new conexion();
+		$result = $db->consulta($sql);
+		$num = $db->encontradas($result);
+		$respuesta->datos = [];
+		$respuesta->mensaje = "";
+		$respuesta->codigo = "";
+		if ($num != 0) {
+			for ($i=0; $i < $num; $i++) {
+				$respuesta->datos[] = mysql_fetch_array($result);
+			}
+			$respuesta->mensaje = "Ok";
+			$respuesta->codigo = 1;
+		} else {
+			$respuesta->mensaje = "Sin resultados.";
+			$respuesta->codigo = 0;
+		}
+		return json_encode($respuesta);
+	}
+
+	// Modificar Usuario
+	function ModificarUsuarioSeg($id, $nombre_usuario,$clave, $persona_id, $rol_id) {
+		$sql = "UPDATE usuario SET nombre_usuario = '$nombre_usuario', clave = '$clave', persona_id = '$persona_id',rol_id = '$rol_id' WHERE id = $id";
+		$file = fopen("prourban.log", "a");
+		fwrite($file, $sql);
+		fclose($file);
+		$db = new conexion();
+		$result = $db->consulta($sql);
+		$respuesta->datos = [];
+		$respuesta->mensaje = "";
+		$respuesta->codigo = "";
+		if ($result) {
+			for ($i=0; $i < $num; $i++) {
+				$respuesta->datos[] = mysql_fetch_array($result);
+			}
+			$respuesta->mensaje = "Registro actualizado.";
+			$respuesta->codigo = 1;
+		} else {
+			$respuesta->mensaje = "Datos no válidos.";
+			$respuesta->codigo = 0;
+		}
+		return json_encode($respuesta);
+	}
+
+	// Eliminar Usuario
+	function EliminarUsuarioSeg($id) {
+		$sql = "DELETE FROM usuario WHERE id=$id";
+		$db = new conexion();
+		$result = $db->consulta($sql);
+		$respuesta->datos = [];
+		$respuesta->mensaje = "";
+		$respuesta->codigo = "";
+		if ($result) {
+			for ($i=0; $i < $num; $i++) {
+				$respuesta->datos[] = mysql_fetch_array($result);
+			}
+			$respuesta->mensaje = "Registro eliminado con éxito.";
+			$respuesta->codigo = 1;
+		} else {
+			$respuesta->mensaje = "Ha ocurrido un error.";
+			$respuesta->codigo = 0;
+		}
+		return json_encode($respuesta);
+	}
 
 
 
