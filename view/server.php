@@ -66,20 +66,20 @@ array('respuesta' => 'xsd:string'), $ns);
 
 
 
-$server->register("BuscarUsuarioSeg",
+$server->register("BuscarUsuario",
 array('id' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 
 //	Crea rol
-$server->register("InsertarUsuarioSeg",
+$server->register("InsertarUsuario",
 array('nombre_usuario' => 'xsd:string','clave' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 //	Modifica rol
-$server->register("ModificarUsuarioSeg",
+$server->register("ModificarUsuario",
 array('id' => 'xsd:string', 'nombre_usuario' => 'xsd:string', 'clave' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 //	Elimina rol
-$server->register("EliminarUsuarioSeg",
+$server->register("EliminarUsuario",
 array('id' => 'xsd:string'),
 array('respuesta' => 'xsd:string'), $ns);
 
@@ -464,6 +464,59 @@ $server->register("CambiarEstadoFormapago",
 			array('respuesta' => 'xsd:string'), $ns);
 
 //FIN PARTE DE LORENA
+
+/*********************** Modulo Reserva ****************/
+//	Lista de Reservas Admin
+$server->register("listaReserva",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("estadoReserva",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("listarAreas",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+$server->register("listarAreasAdmin",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+$server->register("listaReservaAceptada",
+			array(),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+$server->register("CancelarPreReserva",
+			array('id' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+$server->register("insertarReserva",
+			array('fecha' => 'xsd:string', ' desde' => 'xsd:string', 'hasta' => 'xsd:string', 'area' => 'xsd:string','id' => 'xsd:string' ),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+$server->register("insertarHoraMantenimiento",
+			array('fecha_inicio' => 'xsd:string','fecha_fin' => 'xsd:string', ' desde' => 'xsd:string', 'hasta' => 'xsd:string','area' => 'xsd:string' ),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+
+$server->register("eliminacionAutomatica",
+			array('valor' => 'xsd:string'),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+    $server->register("guardarHora",
+			array($valor),
+			array('respuesta' => 'xsd:string'), $ns);
+
+
+/*********************** Fin Modulo Reserva ****************/
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);
