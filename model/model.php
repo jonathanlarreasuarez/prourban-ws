@@ -2816,7 +2816,7 @@ function ActivarUsuario($id) {
 }
 
 
-
+//--- RESERVAS MODULO ---
 
 function listaReserva(){
     
